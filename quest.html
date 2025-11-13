@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Autoavaliação de Organização</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    form {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .pergunta {
+      margin-bottom: 20px;
+    }
+    .pergunta p {
+      font-weight: bold;
+    }
+    label {
+      display: block;
+      margin: 5px 0;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .resultado {
+      max-width: 800px;
+      margin: 30px auto;
+      font-size: 18px;
+      background: #eaf2f8;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 6px solid #3498db;
+    }
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      form, .resultado { padding: 15px; }
+      button { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Autoavaliação de Organização</h1>
+  <form id="quizForm">
+    <div id="perguntas"></div>
+    <button type="submit">Ver Resultado</button>
+  </form>
+  <div class="resultado" id="resultado"></div>
+
+  <script>
+    const perguntas = [
+      "1. Com que frequência você planeja seu dia com antecedência?",
+      "2. Você costuma usar listas de tarefas ou planejadores?",
+      "3. Quando tem uma tarefa difícil, você tende a:",
+      "4. Durante o estudo ou trabalho, você:",
+      "5. Você costuma dizer 'sim' para compromissos mesmo sem tempo?",
+      "6. Quanto tempo você gasta por dia em redes sociais ou jogos?",
+      "7. Você reserva tempo para descanso ou reflexão?"
+    ];
+
+    const opcoes = [
+      ["A) Sempre", "B) Às vezes", "C) Raramente", "D) Nunca"],
+      ["A) Sim, diariamente", "B) Algumas vezes por semana", "C) Raramente", "D) Nunca"],
+      ["A) Fazer primeiro", "B) Adiar", "C) Evitar completamente", "D) Dividir em partes menores"],
+      ["A) Desativa notificações", "B) Se distrai com frequência", "C) Faz multitarefas", "D) Usa Pomodoro"],
+      ["A) Nunca", "B) Raramente", "C) Às vezes", "D) Frequentemente"],
+      ["A) Menos de 1 hora", "B) 1 a 2 horas", "C) 2 a 4 horas", "D) Mais de 4 horas"],
+      ["A) Todos os dias", "B) Algumas vezes por semana", "C) Raramente", "D) Nunca"]
+    ];
+
+    const container = document.getElementById("perguntas");
+
+    perguntas.forEach((pergunta, i) => {
+      const div = document.createElement("div");
+      div.className = "pergunta";
+      div.innerHTML = `<p>${pergunta}</p>` +
+        opcoes[i].map((op, j) => {
+          const letra = op[0];
+          return `<label><input type="radio" name="q${i}" value="${letra}" required> ${op}</label>`;
+        }).join("");
+      container.appendChild(div);
+    });
+
+    document.getElementById("quizForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      let countA = 0, countB = 0, countC = 0, countD = 0;
+
+      for (let i = 0; i < perguntas.length; i++) {
+        const resposta = document.querySelector(`input[name="q${i}"]:checked`).value;
+        if (resposta === 'A') countA++;
+        else if (resposta === 'B') countB++;
+        else if (resposta === 'C') countC++;
+        else if (resposta === 'D') countD++;
+      }
+
+      let resultado = "";
+      if (countA >= countB && countA >= countC && countA >= countD) {
+        resultado = "✅ <strong>Perfil: Organizado e proativo.</strong><br>Você já possui bons hábitos. Continue usando ferramentas e técnicas, e revise metas regularmente.";
+      } else if (countB >= countA && countB >= countC && countB >= countD) {
+        resultado = "🟡 <strong>Perfil: Moderadamente organizado.</strong><br>Você tem noções de organização, mas pode melhorar sua consistência. Planeje com mais frequência e defina prioridades.";
+      } else if (countC >= countA && countC >= countB && countC >= countD) {
+        resultado = "🔴 <strong>Perfil: Desorganizado.</strong><br>Comece com pequenas mudanças. Use listas simples, evite multitarefas e controle o tempo em redes sociais.";
+      } else {
+        resultado = "⚠️ <strong>Perfil: Sobrecarregado ou sem estratégias.</strong><br>Reavalie sua rotina. Aprenda a dizer “não”, adote ferramentas básicas e reserve tempo para si mesmo.";
+      }
+
+      document.getElementById("resultado").innerHTML = resultado;
+    });
+  </script>
+</body>
+</html>
+
